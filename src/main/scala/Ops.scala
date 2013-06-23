@@ -12,33 +12,33 @@ package object tlist {
 sealed trait In[A,B <: TList]
 
 sealed trait InAux {
-  implicit def tail[A,H,T <: TList](implicit in: In[A,T]): In[A, H :: T] = new In[A,H :: T]{}
+  implicit def tail[A,H,T <: TList](implicit in: In[A,T]): In[A, H :: T] = null
 }
 
 object In extends InAux {
-  implicit def head[A,T <: TList]: In[A, A :: T] = new In[A, A :: T]{}
+  implicit def head[A,T <: TList]: In[A, A :: T] = null
 }
 
 @implicitNotFound( msg = "Cannot prove ${A} is a subset of ${B}" )
 sealed trait Subset[A <: TList, B <: TList]
 
 sealed trait SubsetAux {
-  implicit def ht[H, T <: TList, A <: TList](implicit h: In[H,A], t: Subset[T,A]): Subset[H :: T, A] = new Subset[H :: T, A]{}
+  implicit def ht[H, T <: TList, A <: TList](implicit h: In[H,A], t: Subset[T,A]): Subset[H :: T, A] = null
 }
 
 object Subset extends SubsetAux {
-  implicit def nil[A <: TList]: Subset[TNil, A] = new Subset[TNil, A]{}
+  implicit def nil[A <: TList]: Subset[TNil, A] = null
 }
 
 @implicitNotFound( msg = "Cannot prove ${A} is not in ${B}" )
 sealed trait NotIn[A,B <: TList]
 
 sealed trait NotInAux2 {
-  implicit def nil[A]: NotIn[A, TNil] = new NotIn[A, TNil]{}
+  implicit def nil[A]: NotIn[A, TNil] = null
 }
 
 sealed trait NotInAux1 extends NotInAux2 {
-  implicit def tail[A,H,T <: TList](implicit in: NotIn[A,T]): NotIn[A, H :: T] = new NotIn[A,H :: T]{}
+  implicit def tail[A,H,T <: TList](implicit in: NotIn[A,T]): NotIn[A, H :: T] = null
 }
 
 object NotIn extends NotInAux1 {
@@ -49,17 +49,15 @@ object NotIn extends NotInAux1 {
 sealed trait Union[A <: TList,B <: TList,O <: TList] 
 
 trait UnionAux2 {
-  implicit def cons[H, T <:TList, B <: TList, TT <: TList](implicit not: NotIn[H,B], u: Union[T,B,TT]): Union[H :: T, B, H :: TT] = 
-    new Union[H :: T, B, H :: TT]{}
+  implicit def cons[H, T <:TList, B <: TList, TT <: TList](implicit not: NotIn[H,B], u: Union[T,B,TT]): Union[H :: T, B, H :: TT] = null
 }
 
 trait UnionAux1 extends UnionAux2 {
-  implicit def consIn[H, T <: TList, B <: TList, TT <: TList](implicit in: In[H,B], u: Union[T,B,TT]): Union[H :: T, B, TT] =
-    new Union[H :: T, B, TT]{}
+  implicit def consIn[H, T <: TList, B <: TList, TT <: TList](implicit in: In[H,B], u: Union[T,B,TT]): Union[H :: T, B, TT] = null
 }
 
 object Union extends UnionAux1 {
-  implicit def nil[A <: TNil,B <: TList]: Union[A,B,B] = new Union[A,B,B]{}
+  implicit def nil[A <: TNil,B <: TList]: Union[A,B,B] = null
 }
 
 class Dependencies[T <: TList] private[Dependencies] (map: Map[ClassTag[_], Any]) {
