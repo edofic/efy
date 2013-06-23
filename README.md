@@ -23,4 +23,4 @@ object Sample extends App {
 }
 ```
 
-Note that everything is typechecked. At compilation time `res` contains the information that it needs a `String` and an `Int` value. And `deps` also contains types of all it's members. `res run deps` will not compile it `deps` types are not a subset of `res` dependencies(order doesn't matter!).
+Note that everything is typechecked. At compilation time `res` contains the information that it needs a `String` and an `Int` value. And `deps` also contains types of all it's members. `res run deps` will not compile if `deps` types are not a subset of `res` dependencies(order doesn't matter!).
