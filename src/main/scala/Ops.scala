@@ -69,6 +69,8 @@ object Union extends UnionAux1 {
 class Dependencies[T <: TList] private[Dependencies] (map: Map[ClassTag[_], Any]) {
   def +[A](value: A)(implicit key: ClassTag[A]) = new Dependencies[A :: T](map + ((key, value)))
   
+  def ::[A](value: A)(implicit key: ClassTag[A]) = this + value
+
   def get[A](implicit in: In[A, T], key: ClassTag[A]) = map(key).asInstanceOf[A]
 }
 

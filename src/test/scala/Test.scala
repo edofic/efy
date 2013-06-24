@@ -6,7 +6,7 @@ object Sample extends App {
     b <- Depends[String] 
   } yield a.toString + b
   
-  val deps = Dependencies.empty + 1 + "st"
+  val deps = 1 :: "st" :: Dependencies.empty
   println(res run deps)
   
   val deps2 = Dependencies.empty + "st" + 1 + 'foo
