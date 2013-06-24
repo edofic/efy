@@ -1,3 +1,4 @@
+import language.implicitConversions
 import annotation.implicitNotFound
 import reflect.ClassTag
 import tlist._
@@ -58,6 +59,11 @@ trait UnionAux1 extends UnionAux2 {
 
 object Union extends UnionAux1 {
   implicit def nil[A <: TNil,B <: TList]: Union[A,B,B] = null
+  
+  object toSubset {
+    implicit def left[A <: TList,B <: TList,O <: TList](implicit u: Union[A,B,O]): Subset[A,O] = null
+    implicit def right[A <: TList,B <: TList,O <: TList](implicit u: Union[A,B,O]): Subset[B,O] = null
+  }
 }
 
 class Dependencies[T <: TList] private[Dependencies] (map: Map[ClassTag[_], Any]) {
@@ -79,7 +85,9 @@ sealed trait Depends[A <: TList, R] {
     def run(deps: Dependencies[A]): RR = f(self run deps)
   }
   
-  def flatMap[AA <: TList, RR, AAA <: TList](f: R => Depends[AA,RR])(implicit union: Union[A,AA,AAA], s1: Subset[A,AAA], s2: Subset[AA,AAA]): Depends[AAA,RR] = new Depends[AAA,RR] {
+  def flatMap[AA <: TList, RR, AAA <: TList](f: R => Depends[AA,RR])(implicit union: Union[A,AA,AAA]): Depends[AAA,RR] = new Depends[AAA,RR] {
+    import Union.toSubset._
+  
     def run(deps: Dependencies[AAA]): RR = {
       val temp = self run deps
       f(temp) run deps
